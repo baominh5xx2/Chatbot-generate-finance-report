@@ -13,7 +13,7 @@ print(f"✅ Đang chạy trên: {device.upper()}")
 bert_model = SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2", device=device)
 
 # ✅ KẾT NỐI PINECONE
-PINECONE_API_KEY = "pcsk_YgDiM_RwKYbFr23sS7RSEPjAwaQhf26BXzrSgUbeXdCeGX3mzusYUfgT3P58sQdp2uwMZ"
+PINECONE_API_KEY = ""
 pc = Pinecone(api_key=PINECONE_API_KEY)
 
 # ✅ KẾT NỐI HOẶC TẠO INDEX TRONG PINECONE
