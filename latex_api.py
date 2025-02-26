@@ -4,6 +4,10 @@ import pandas as pd
 from jinja2 import Template
 from telegram import Update, Document
 from telegram.ext import Updater, MessageHandler, Filters, CallbackContext
+import asyncio
+from datetime import datetime
+import subprocess
+import io
 
 # Token Telegram Bot (thay bằng token thật của bạn)
 TELEGRAM_TOKEN = "YOUR_TELEGRAM_BOT_TOKEN"
@@ -43,6 +47,75 @@ Dưới đây là báo cáo sinh tự động từ dữ liệu CSV.
 
 \end{document}
 """
+
+class LatexAPI:
+    def __init__(self):
+        self.output_dir = "reports"
+        if not os.path.exists(self.output_dir):
+            os.makedirs(self.output_dir)
+
+    def _generate_latex_content(self, data):
+        return r"""
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{geometry}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage[vietnamese]{babel}
+
+\title{Báo Cáo Kinh Tế}
+\author{Finance Chatbot}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+%s
+
+\end{document}
+""" % data
+
+    async def generate_report(self, content):
+        """Generate LaTeX report asynchronously"""
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        tex_file = f"{self.output_dir}/report_{timestamp}.tex"
+        
+        # Generate and write LaTeX content
+        latex_content = self._generate_latex_content(content)
+        with open(tex_file, 'w', encoding='utf-8') as f:
+            f.write(latex_content)
+        
+        try:
+            # Run pdflatex asynchronously
+            process = await asyncio.create_subprocess_exec(
+                'pdflatex', 
+                '-output-directory', self.output_dir,
+                tex_file,
+                stdout=asyncio.subprocess.PIPE,
+                stderr=asyncio.subprocess.PIPE
+            )
+            await process.communicate()
+            
+            pdf_file = tex_file.replace('.tex', '.pdf')
+            
+            if os.path.exists(pdf_file):
+                # Read PDF into buffer
+                with open(pdf_file, 'rb') as f:
+                    pdf_buffer = io.BytesIO(f.read())
+                    pdf_buffer.seek(0)
+                
+                # Cleanup files
+                for ext in ['.aux', '.log', '.tex', '.pdf']:
+                    temp_file = tex_file.replace('.tex', ext)
+                    if os.path.exists(temp_file):
+                        os.remove(temp_file)
+                
+                return pdf_buffer
+            
+        except Exception as e:
+            print(f"Error generating PDF: {e}")
+            return None
 
 # Hàm tải mã LaTeX lên Overleaf
 def upload_to_overleaf(latex_code):

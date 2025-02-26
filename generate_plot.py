@@ -1,22 +1,17 @@
-import matplotlib as plt
+import matplotlib.pyplot as plt
 import numpy as np
-import google.generativeai as genai
 import re
+import io
+from telegram import Update
+from telegram.ext import CallbackContext
 
-class generate_plot():
-    def __init__(self, x, y):
+class GeneratePlot:
+    def __init__(self, x, y, gemini_api=None):
         self.x = x
         self.y = y
-    def generate_ai_response(self, prompt, max_retries=3):
-        for attempt in range(max_retries):
-            try:
-                model = genai.GenerativeModel("gemini-2.0-flash")
-                response = model.generate_content(prompt)
-                return response.text
-            except Exception as e:
-                print(f"❌ Lỗi lần {attempt + 1}: {e}")
-                if attempt == max_retries - 1:
-                    return "Xin lỗi, tôi đang gặp vấn đề kỹ thuật. Vui lòng thử lại sau."
+        self.user_plot_data = {}
+        self.gemini_api = gemini_api
+
     def clean_generated_code(self, code: str):
         patterns = [
             r'```python\s*',  # Xóa markdown
@@ -28,6 +23,7 @@ class generate_plot():
         for pattern in patterns:
             code = re.sub(pattern, '', code)
         return code.strip()
+
     async def generate_plot_code(self, description, last_data=None):
         prompt = f"""
         - Trả về nguyên code Python, không giải thích
@@ -46,19 +42,25 @@ class generate_plot():
         - Code phải hợp lệ và có thể chạy trực tiếp mà không bị lỗi
         """
 
-        model = genai.GenerativeModel("gemini-2.0-flash")
-        response = model.generate_content(prompt)
-        raw_code = response.text if response else ""
-        cleaned_code = self.clean_generated_code(raw_code)
+        try:
+            code = self.gemini_api.generate_ai_response(prompt) if self.gemini_api else None
+            cleaned_code = self.clean_generated_code(code) if code else None
+            return cleaned_code or self.get_default_plot_code()
+        except Exception as e:
+            print(f"Error generating plot code: {e}")
+            return self.get_default_plot_code()
 
-        return cleaned_code or """
+    def get_default_plot_code(self):
+        return """
         import matplotlib.pyplot as plt
         import numpy as np
         plt.plot([1,2,3],[4,5,6])
         plt.title('Biểu đồ mặc định')
         plt.savefig('plot.png')
         """
+
     async def generate_plot(self, update: Update, context: CallbackContext, description: str):
+        """Changed from static method to instance method"""
         user_id = update.message.chat_id
         try:
             if not description.strip():
@@ -67,12 +69,12 @@ class generate_plot():
 
             # Lấy dữ liệu cũ nếu có yêu cầu sửa đồ thị
             last_data = None
-            if "sửa" in description and user_id in user_plot_data and user_plot_data[
+            if "sửa" in description and user_id in self.user_plot_data and self.user_plot_data[
                     user_id]:
-                last_data = user_plot_data[user_id][-1].get("data", {})
+                last_data = self.user_plot_data[user_id][-1].get("data", {})
 
             # Tạo code vẽ đồ thị
-            plot_code = await generate_plot_code(description, last_data)
+            plot_code = await self.generate_plot_code(description, last_data)
 
             # Thực thi code
             plt.clf()
@@ -96,9 +98,9 @@ class generate_plot():
             await update.message.reply_photo(photo=buffer)
 
             # Lưu dữ liệu đồ thị
-            if user_id not in user_plot_data:
-                user_plot_data[user_id] = []
-            user_plot_data[user_id].append({
+            if user_id not in self.user_plot_data:
+                self.user_plot_data[user_id] = []
+            self.user_plot_data[user_id].append({
                 "description": description,
                 "code": plot_code,
                 "data": exec_locals  # Lưu các biến data

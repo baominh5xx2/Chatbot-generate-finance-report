@@ -8,22 +8,22 @@ import io
 import re
 from dotenv import load_dotenv
 import os
+from generate_plot import GeneratePlot
+from gemini_api import Gemini_api
+
+# Add this line to load variables from .env
+load_dotenv()
+
 TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
-
-# Cấu hình Gemini AI
 genai.configure(api_key=GEMINI_API_KEY)
-
-# Cấu hình bot Telegram
 app = Application.builder().token(TELEGRAM_BOT_TOKEN).build()
-
-# Flask để chạy Webhook
 flask_app = Flask(__name__)
-
-# Bộ nhớ hội thoại và dữ liệu đồ thị
 user_conversations = {}
-user_plot_data = {}  # Lưu trữ dữ liệu đồ thị của từng người dùng
+user_plot_data = {}  
 
+# Initialize Gemini API
+gemini_bot = Gemini_api()
 
 def generate_ai_response(prompt, max_retries=3):
     """Tạo phản hồi từ Gemini AI với retry"""
@@ -61,111 +61,6 @@ async def start_command(update: Update, context: CallbackContext):
     await update.message.reply_text(
         "Xin chào! Tôi là chatbot hỗ trợ với Gemini AI.")
 
-
-def clean_generated_code(code: str):
-    """Làm sạch code Python từ Gemini"""
-    patterns = [
-        r'```python\s*',  # Xóa markdown
-        r'```\s*',
-        r'plt\.show\(\)',  # Xóa lệnh hiển thị
-        r'#.*\n',  # Xóa comment
-        r'print\(.*\)\n'  # Xóa lệnh print
-    ]
-    for pattern in patterns:
-        code = re.sub(pattern, '', code)
-    return code.strip()
-
-
-async def generate_plot_code(description, last_data=None):
-    """Tạo code Python vẽ đồ thị"""
-    prompt = f"""
-    - Trả về nguyên code Python, không giải thích
-    - Dữ liệu bịa ra để vẽ đồ thị
-    - Mỗi lệnh matplotlib PHẢI xuống dòng riêng
-    - TUYỆT ĐỐI KHÔNG viết nhiều lệnh plt trên cùng 1 dòng
-    - Chỉ viết mỗi lệnh một dòng duy nhất
-    - Nếu có dữ liệu cũ, sử dụng lại: {last_data}
-    Yêu cầu: {description}
-    Code phải bao gồm:
-    - import matplotlib.pyplot as plt
-    - import numpy as np
-    - Vẽ đồ thị với plt.plot(), plt.scatter() hoặc plt.bar()
-    - plt.title() với tiêu đề phù hợp
-    - plt.savefig() để lưu hình ảnh
-    - Code phải hợp lệ và có thể chạy trực tiếp mà không bị lỗi
-    """
-
-    model = genai.GenerativeModel("gemini-2.0-flash")
-    response = model.generate_content(prompt)
-    raw_code = response.text if response else ""
-    cleaned_code = clean_generated_code(raw_code)
-
-    return cleaned_code or """
-    import matplotlib.pyplot as plt
-    import numpy as np
-    plt.plot([1,2,3],[4,5,6])
-    plt.title('Biểu đồ mặc định')
-    plt.savefig('plot.png')
-    """
-
-
-async def generate_plot(update: Update, context: CallbackContext,
-                        description: str):
-    user_id = update.message.chat_id
-
-    try:
-        if not description.strip():
-            await update.message.reply_text("⚠️ Vui lòng nhập mô tả chi tiết")
-            return
-
-        # Lấy dữ liệu cũ nếu có yêu cầu sửa đồ thị
-        last_data = None
-        if "sửa" in description and user_id in user_plot_data and user_plot_data[
-                user_id]:
-            last_data = user_plot_data[user_id][-1].get("data", {})
-
-        # Tạo code vẽ đồ thị
-        plot_code = await generate_plot_code(description, last_data)
-
-        # Thực thi code
-        plt.clf()
-        exec_globals = {"plt": plt, "np": np, "io": io}
-        exec_locals = {}
-        try:
-            exec(plot_code, exec_globals, exec_locals)
-        except Exception as e:
-            error_msg = f"🚨 LỖI CODE:\n{plot_code}\nLỖI: {str(e)}"
-            print(error_msg)
-            await update.message.reply_text(
-                "Hệ thống gặp lỗi xử lý code vẽ đồ thị 😢")
-            return
-
-        # Lưu đồ thị vào buffer
-        buffer = io.BytesIO()
-        plt.savefig(buffer, format='png', dpi=300, bbox_inches='tight')
-        buffer.seek(0)
-
-        # Gửi ảnh qua Telegram
-        await update.message.reply_photo(photo=buffer)
-
-        # Lưu dữ liệu đồ thị
-        if user_id not in user_plot_data:
-            user_plot_data[user_id] = []
-        user_plot_data[user_id].append({
-            "description": description,
-            "code": plot_code,
-            "data": exec_locals  # Lưu các biến data
-        })
-
-        # Đóng figure
-        plt.close()
-
-    except Exception as e:
-        print(f"❌ Lỗi khi tạo đồ thị: {e}")
-        await update.message.reply_text(
-            "Xin lỗi, đã xảy ra lỗi khi tạo đồ thị. Vui lòng thử lại.")
-
-
 async def handle_message(update: Update, context: CallbackContext):
     """Xử lý tin nhắn"""
     user_id = update.message.chat_id
@@ -181,7 +76,7 @@ async def handle_message(update: Update, context: CallbackContext):
     # Xử lý yêu cầu vẽ đồ thị
     if "vẽ" in message or "đồ thị" in message:
         user_conversations[user_id].append(f"Người dùng: {message}")
-        await generate_plot(update, context,
+        await GeneratePlot.generate_plot(update, context,
                             message.replace("/plot", "").strip())
         return
 
@@ -227,7 +122,8 @@ def run_flask():
 
 
 if __name__ == "__main__":
-    app.add_handler(CommandHandler("start", start_command))
+    app.add_handler(CommandHandler("start", gemini_bot.start_command))
+    app.add_handler(CommandHandler("report", gemini_bot.generate_report_command))  # Add this line
     app.add_handler(
-        MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
+        MessageHandler(filters.TEXT & ~filters.COMMAND, gemini_bot.handle_message))
     app.run_polling()
