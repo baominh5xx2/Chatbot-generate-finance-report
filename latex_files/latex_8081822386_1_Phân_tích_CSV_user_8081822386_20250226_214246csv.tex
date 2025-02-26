@@ -1,0 +1,111 @@
+\documentclass[12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{geometry}
+\usepackage{fancyhdr}
+\usepackage{enumitem}
+
+\geometry{a4paper, margin=1in}
+
+\title{Báo Cáo Phân Tích Dữ Liệu CSV: user\_8081822386\_20250226\_214246.csv}
+\author{}
+\date{\today}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\textit{Báo Cáo Phân Tích Dữ Liệu}}
+\fancyhead[R]{\today}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+\begin{document}
+
+\maketitle
+\thispagestyle{empty}
+
+\newpage
+\tableofcontents
+\newpage
+
+\section{Tổng quan về dữ liệu}
+
+\subsection{Thông tin chung}
+\begin{itemize}
+    \item Tên file: user\_8081822386\_20250226\_214246.csv
+    \item Số hàng: 4
+    \item Số cột: 3
+    \item Các cột: Name, Age, City
+\end{itemize}
+
+\section{Phân tích chi tiết từng cột}
+
+\subsection{Phân tích cột số: Age}
+\begin{itemize}
+    \item Min: 24.00
+    \item Max: 40.00
+    \item Mean: 31.75
+    \item Std: 7.14
+\end{itemize}
+
+\subsection{Phân tích cột phân loại: Name}
+\begin{itemize}
+    \item Số giá trị duy nhất: 4
+    \item Các giá trị phổ biến nhất:
+    \begin{itemize}
+        \item John (1)
+        \item Alice (1)
+        \item Bob (1)
+    \end{itemize}
+\end{itemize}
+
+\subsection{Phân tích cột phân loại: City}
+\begin{itemize}
+    \item Số giá trị duy nhất: 4
+    \item Các giá trị phổ biến nhất:
+    \begin{itemize}
+        \item New York (1)
+        \item Los Angeles (1)
+        \item Chicago (1)
+    \end{itemize}
+\end{itemize}
+
+\subsection{Phân tích cột thời gian}
+\begin{itemize}
+    \item **Name** có thể chứa thông tin thời gian (Cần phân tích thêm)
+\end{itemize}
+
+\section{Phát hiện các mẫu và xu hướng trong dữ liệu}
+
+\subsection{Mẫu và xu hướng ban đầu}
+
+Dựa trên dữ liệu hiện có, chưa thể xác định rõ ràng các mẫu và xu hướng cụ thể. Cần thêm dữ liệu để phân tích sâu hơn. Tuy nhiên, một số điểm ban đầu có thể được lưu ý:
+
+\begin{itemize}
+    \item Sự phân bố tuổi: Độ tuổi có sự biến động nhất định (Std = 7.14), cần xem xét phân bố này có tuân theo quy luật nào không.
+    \item Tính duy nhất của dữ liệu phân loại: Các giá trị trong cột Name và City đều là duy nhất.
+    \item Khả năng có thông tin thời gian trong Name: Cần điều tra xem cột Name có chứa thông tin liên quan đến thời gian (ví dụ: ngày tháng năm sinh) không.
+\end{itemize}
+
+\section{Đề xuất các phương pháp phân tích sâu hơn}
+
+\subsection{Các bước tiếp theo}
+
+Để có được bức tranh đầy đủ hơn về dữ liệu, cần thực hiện các bước sau:
+
+\begin{enumerate}
+    \item **Thu thập thêm dữ liệu:** Số lượng hàng dữ liệu hiện tại còn quá ít để đưa ra kết luận có ý nghĩa.
+    \item **Làm sạch dữ liệu:** Kiểm tra và xử lý các giá trị thiếu, giá trị không hợp lệ.
+    \item **Phân tích thống kê:** Sử dụng các phương pháp thống kê để phân tích sự phân bố của các cột số (ví dụ: biểu đồ histogram, box plot).
+    \item **Phân tích mối tương quan:** Tìm kiếm mối tương quan giữa các cột (ví dụ: giữa Age và City).
+    \item **Phân tích thời gian (nếu có):** Nếu cột Name chứa thông tin thời gian, sử dụng các phương pháp phân tích chuỗi thời gian để tìm kiếm xu hướng.
+    \item **Sử dụng các công cụ trực quan hóa dữ liệu:** Sử dụng các biểu đồ và đồ thị để trực quan hóa dữ liệu và dễ dàng phát hiện các mẫu và xu hướng.
+\end{enumerate}
+
+\section{Kết luận}
+
+Báo cáo này cung cấp một phân tích ban đầu về dữ liệu CSV. Tuy nhiên, do dữ liệu còn hạn chế, cần thực hiện thêm các bước phân tích sâu hơn để đưa ra các kết luận có ý nghĩa. Các đề xuất phân tích sâu hơn đã được trình bày ở trên.
+
+\end{document}

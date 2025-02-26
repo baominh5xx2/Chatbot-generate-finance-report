@@ -1,0 +1,102 @@
+\documentclass[12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{a4paper, margin=1in}
+\usepackage{fancyhdr}
+\usepackage{enumitem}
+
+\title{Báo Cáo Phân Tích Dữ Liệu CSV: user\_8081822386\_20250226\_214549.csv}
+\author{}
+\date{\today}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\textit{Báo Cáo Phân Tích Dữ Liệu CSV}}
+\fancyhead[R]{\today}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+
+\begin{document}
+
+\maketitle
+\thispagestyle{empty}
+\newpage
+
+\tableofcontents
+\newpage
+
+\section{Tổng quan về dữ liệu}
+
+\subsection{Thông tin chung}
+\begin{itemize}
+    \item Tên file: user\_8081822386\_20250226\_214549.csv
+    \item Số hàng: 4
+    \item Số cột: 3
+    \item Các cột: Name, Age, City
+\end{itemize}
+
+\section{Phân tích chi tiết từng cột quan trọng}
+
+\subsection{Phân tích cột số: Age}
+\begin{itemize}
+    \item Min: 24.00
+    \item Max: 40.00
+    \item Mean: 31.75
+    \item Std: 7.14
+\end{itemize}
+
+\subsection{Phân tích cột phân loại: Name}
+\begin{itemize}
+    \item Số giá trị duy nhất: 4
+    \item Các giá trị phổ biến nhất:
+    \begin{itemize}
+        \item John (1)
+        \item Alice (1)
+        \item Bob (1)
+    \end{itemize}
+\end{itemize}
+
+\subsection{Phân tích cột phân loại: City}
+\begin{itemize}
+    \item Số giá trị duy nhất: 4
+    \item Các giá trị phổ biến nhất:
+    \begin{itemize}
+        \item New York (1)
+        \item Los Angeles (1)
+        \item Chicago (1)
+    \end{itemize}
+\end{itemize}
+
+\subsection{Phân tích cột thời gian: Name}
+\begin{itemize}
+    \item Name có thể chứa thông tin thời gian. Cần phân tích sâu hơn để xác định.
+\end{itemize}
+
+\section{Phát hiện các mẫu và xu hướng trong dữ liệu}
+
+Dữ liệu khá nhỏ, khó để tìm ra các mẫu và xu hướng rõ ràng. Tuy nhiên, có thể thấy:
+
+\begin{itemize}
+    \item Các giá trị trong cột 'Name' và 'City' đều là duy nhất.
+    \item Cột 'Name' có thể chứa thông tin thời gian và cần được điều tra thêm.
+\end{itemize}
+
+\section{Đề xuất các phương pháp phân tích sâu hơn}
+
+\begin{itemize}
+    \item Phân tích cột 'Name' kỹ lưỡng hơn để xác định xem có thông tin thời gian ẩn hay không.
+    \item Thu thập thêm dữ liệu để phân tích và tìm ra các xu hướng rõ ràng hơn.
+    \item Sử dụng các công cụ phân tích dữ liệu để khám phá các mối quan hệ giữa các cột.
+    \item Thử nghiệm với các mô hình dự đoán dựa trên cột Age.
+\end{itemize}
+
+\section{Kết luận}
+
+Báo cáo này cung cấp một phân tích ban đầu về dữ liệu CSV được cung cấp. Việc phân tích sâu hơn và thu thập thêm dữ liệu sẽ giúp khám phá ra các thông tin giá trị và đưa ra các quyết định chính xác hơn.
+
+\end{document}

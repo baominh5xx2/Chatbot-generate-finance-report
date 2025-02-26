@@ -1,0 +1,213 @@
+\documentclass[12pt]{article}
+\usepackage{fontspec}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage{float}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.17}
+\usepackage{enumitem}
+\usepackage{fancyhdr} % Đảm bảo gói này được khai báo trước
+\pagestyle{fancy} % Gọi sau khi đã nạp gói
+
+
+\geometry{a4paper, margin=1in}
+
+\title{Báo Cáo Phân Tích Công Ty: Google (Alphabet Inc.)}
+\author{ [Tên của bạn] \\ [Chức danh] \\ [Ngày tháng]}
+\date{Ngày 16 tháng 10 năm 2023}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\textit{Báo cáo Phân tích Công ty: Google (Alphabet Inc.)}}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+\begin{document}
+
+\maketitle
+
+
+\newpage
+
+\tableofcontents
+
+\newpage
+
+\section*{Tóm tắt điểm nhấn đầu tư (Executive Summary)}
+
+Alphabet Inc. (Google) là một trong những công ty công nghệ lớn nhất và có ảnh hưởng nhất trên thế giới. Báo cáo này phân tích toàn diện về hoạt động kinh doanh, tình hình tài chính, môi trường cạnh tranh, rủi ro và cơ hội của Google, đồng thời đưa ra khuyến nghị đầu tư dựa trên phân tích này.
+
+Điểm mạnh của Google bao gồm vị thế thống trị trong lĩnh vực tìm kiếm trực tuyến, hệ sinh thái sản phẩm và dịch vụ đa dạng, khả năng tạo ra doanh thu quảng cáo khổng lồ và tiềm năng tăng trưởng mạnh mẽ trong các lĩnh vực mới nổi như trí tuệ nhân tạo (AI) và điện toán đám mây.  Tuy nhiên, Google cũng phải đối mặt với các rủi ro đáng kể, bao gồm sự cạnh tranh gay gắt từ các công ty công nghệ khác, các vấn đề pháp lý liên quan đến chống độc quyền và quyền riêng tư, và sự thay đổi nhanh chóng của công nghệ.
+
+Dựa trên phân tích định giá và dự báo của chúng tôi, chúng tôi đưa ra khuyến nghị [Mua/Giữ/Bán] cổ phiếu của Alphabet Inc. với mức giá mục tiêu là [Giá].
+
+\newpage
+
+\section{Tổng quan về doanh nghiệp}
+
+Alphabet Inc. là một tập đoàn công nghệ đa quốc gia được thành lập vào năm 2015, với Google là công ty con lớn nhất và quan trọng nhất.  Google hoạt động trong nhiều lĩnh vực khác nhau, bao gồm:
+
+\begin{itemize}
+    \item Tìm kiếm trực tuyến (Google Search)
+    \item Quảng cáo trực tuyến (Google Ads, AdSense, YouTube Ads)
+    \item Hệ điều hành di động (Android)
+    \item Ứng dụng và dịch vụ (Gmail, Google Maps, Google Drive, YouTube)
+    \item Phần cứng (Pixel phones, Nest devices, Google Home)
+    \item Điện toán đám mây (Google Cloud Platform)
+    \item Trí tuệ nhân tạo (Google AI)
+    \item Nghiên cứu và phát triển (Google X)
+\end{itemize}
+
+Alphabet cũng sở hữu các công ty khác ngoài Google, chẳng hạn như Waymo (xe tự lái), Verily (khoa học đời sống) và Calico (nghiên cứu lão hóa).
+
+\section{Phân tích ngành và môi trường kinh doanh}
+
+Ngành công nghệ đang trải qua sự thay đổi nhanh chóng, với sự xuất hiện của các công nghệ mới như AI, blockchain và metaverse.  Google phải đối mặt với sự cạnh tranh gay gắt từ các công ty công nghệ khác, bao gồm:
+
+\begin{itemize}
+    \item Apple
+    \item Microsoft
+    \item Amazon
+    \item Facebook (Meta)
+\end{itemize}
+
+Môi trường pháp lý cũng đang trở nên phức tạp hơn, với các quy định mới về quyền riêng tư, chống độc quyền và thuế.  Google phải đối mặt với nhiều vụ kiện chống độc quyền trên toàn thế giới.
+
+\section{Phân tích tài chính chi tiết}
+
+\subsection{Doanh thu}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{lrrrr}
+        \toprule
+        Năm & 2020 & 2021 & 2022 & 2023 (Dự kiến) \\
+        \midrule
+        Doanh thu (tỷ đô la) & 182.5 & 257.6 & 282.8 & 300.0 \\
+        Tăng trưởng (\%) & - & 41.2\% & 9.8\% & 6.1\% \\
+        \bottomrule
+    \end{tabular}
+    \caption{Doanh thu của Google (Alphabet Inc.)}
+    \label{tab:revenue}
+\end{table}
+
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}
+        \begin{axis}[
+            width=0.8\textwidth,
+            height=6cm,
+            xlabel=Năm,
+            ylabel=Doanh thu (tỷ đô la),
+            xtick={2020,2021,2022,2023},
+            xticklabels={2020,2021,2022,2023 (Dự kiến)},
+            ymin=150, ymax=320,
+            grid=major
+        ]
+        \addplot[color=blue, mark=*, line width=1.5pt] coordinates {
+            (2020,182.5)
+            (2021,257.6)
+            (2022,282.8)
+            (2023,300)
+        };
+        \end{axis}
+    \end{tikzpicture}
+    \caption{Biểu đồ Doanh thu của Google (Alphabet Inc.)}
+    \label{fig:revenue}
+\end{figure}
+
+\subsection{Lợi nhuận}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{lrrrr}
+        \toprule
+        Năm & 2020 & 2021 & 2022 & 2023 (Dự kiến) \\
+        \midrule
+        Lợi nhuận ròng (tỷ đô la) & 40.3 & 76.0 & 60.0 & 65.0 \\
+        Biên lợi nhuận ròng (\%) & 22.1\% & 29.5\% & 21.2\% & 21.7\% \\
+        \bottomrule
+    \end{tabular}
+    \caption{Lợi nhuận của Google (Alphabet Inc.)}
+    \label{tab:profit}
+\end{table}
+
+\subsection{Các chỉ số tài chính khác}
+
+\begin{itemize}
+    \item ROE: [Giá trị]
+    \item ROA: [Giá trị]
+    \item Tỷ lệ nợ trên vốn chủ sở hữu: [Giá trị]
+\end{itemize}
+
+\section{Phân tích SWOT}
+
+\textbf{Điểm mạnh (Strengths):}
+
+\begin{itemize}
+    \item Vị thế thống trị trong lĩnh vực tìm kiếm trực tuyến.
+    \item Hệ sinh thái sản phẩm và dịch vụ đa dạng.
+    \item Khả năng tạo ra doanh thu quảng cáo khổng lồ.
+    \item Tiềm năng tăng trưởng mạnh mẽ trong các lĩnh vực mới nổi.
+    \item Thương hiệu mạnh.
+    \item Nguồn lực tài chính dồi dào.
+\end{itemize}
+
+\textbf{Điểm yếu (Weaknesses):}
+
+\begin{itemize}
+    \item Phụ thuộc nhiều vào doanh thu quảng cáo.
+    \item Vấn đề về quyền riêng tư và bảo mật dữ liệu.
+    \item Chậm chạp trong việc đổi mới ở một số lĩnh vực.
+\end{itemize}
+
+\textbf{Cơ hội (Opportunities):}
+
+\begin{itemize}
+    \item Tăng trưởng trong điện toán đám mây.
+    \item Phát triển trí tuệ nhân tạo.
+    \item Mở rộng sang các thị trường mới nổi.
+    \item Metaverse.
+\end{itemize}
+
+\textbf{Thách thức (Threats):}
+
+\begin{itemize}
+    \item Cạnh tranh gay gắt từ các công ty công nghệ khác.
+    \item Các vấn đề pháp lý liên quan đến chống độc quyền.
+    \item Sự thay đổi nhanh chóng của công nghệ.
+    \item Sự suy thoái kinh tế toàn cầu.
+\end{itemize}
+
+\section{Định giá và dự báo}
+
+[Phân tích định giá (ví dụ: DCF, so sánh với các công ty tương đương) và dự báo doanh thu, lợi nhuận và các chỉ số tài chính khác trong 5-10 năm tới.]
+
+\section{Khuyến nghị đầu tư}
+
+[Dựa trên phân tích trên, đưa ra khuyến nghị đầu tư (Mua/Giữ/Bán) và giá mục tiêu.]
+
+Ví dụ: "Dựa trên phân tích định giá và dự báo của chúng tôi, chúng tôi đưa ra khuyến nghị Mua cổ phiếu của Alphabet Inc. với mức giá mục tiêu là \$[Giá]."
+
+\section{Các rủi ro chính}
+
+\begin{itemize}
+    \item \textbf{Rủi ro cạnh tranh:} Sự cạnh tranh gay gắt từ các công ty công nghệ khác có thể làm giảm thị phần và lợi nhuận của Google.
+    \item \textbf{Rủi ro pháp lý:} Các vấn đề pháp lý liên quan đến chống độc quyền và quyền riêng tư có thể dẫn đến các khoản tiền phạt lớn và hạn chế hoạt động kinh doanh của Google.
+    \item \textbf{Rủi ro công nghệ:} Sự thay đổi nhanh chóng của công nghệ có thể khiến các sản phẩm và dịch vụ của Google trở nên lỗi thời.
+    \item \textbf{Rủi ro kinh tế:} Sự suy thoái kinh tế toàn cầu có thể làm giảm doanh thu quảng cáo của Google.
+    \item \textbf{Rủi ro quy định:} Các quy định mới về quyền riêng tư và bảo mật dữ liệu có thể làm tăng chi phí tuân thủ và hạn chế khả năng thu thập dữ liệu của Google.
+\end{itemize}
+
+\section{Kết luận}
+
+Alphabet Inc. (Google) là một công ty công nghệ hàng đầu với nhiều điểm mạnh và cơ hội tăng trưởng. Tuy nhiên, Google cũng phải đối mặt với những rủi ro đáng kể.  Khuyến nghị đầu tư của chúng tôi được đưa ra dựa trên sự cân nhắc kỹ lưỡng giữa các yếu tố này.
+
+\end{document}

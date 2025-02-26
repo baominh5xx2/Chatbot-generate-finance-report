@@ -1,0 +1,12 @@
+\contentsline {section}{\numberline {1}Tổng quan về dữ liệu}{3}{section.1}%
+\contentsline {subsection}{\numberline {1.1}Thông tin chung}{3}{subsection.1.1}%
+\contentsline {section}{\numberline {2}Phân tích chi tiết từng cột}{3}{section.2}%
+\contentsline {subsection}{\numberline {2.1}Phân tích cột số: Age}{3}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2.2}Phân tích cột phân loại: Name}{3}{subsection.2.2}%
+\contentsline {subsection}{\numberline {2.3}Phân tích cột phân loại: City}{3}{subsection.2.3}%
+\contentsline {subsection}{\numberline {2.4}Phân tích cột thời gian}{3}{subsection.2.4}%
+\contentsline {section}{\numberline {3}Phát hiện các mẫu và xu hướng trong dữ liệu}{4}{section.3}%
+\contentsline {subsection}{\numberline {3.1}Mẫu và xu hướng ban đầu}{4}{subsection.3.1}%
+\contentsline {section}{\numberline {4}Đề xuất các phương pháp phân tích sâu hơn}{4}{section.4}%
+\contentsline {subsection}{\numberline {4.1}Các bước tiếp theo}{4}{subsection.4.1}%
+\contentsline {section}{\numberline {5}Kết luận}{4}{section.5}%

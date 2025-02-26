@@ -1,24 +1,31 @@
 from telegram import Update
-from telegram.ext import Application, CommandHandler, MessageHandler, filters, CallbackContext
+from telegram.ext import Application, CommandHandler, MessageHandler, filters, CallbackContext, CallbackQueryHandler
 from flask import Flask, request
 import google.generativeai as genai
 import matplotlib.pyplot as plt
 import numpy as np
 import io
+
 import re
 from dotenv import load_dotenv
 import os
 from generate_plot import GeneratePlot
 from gemini_api import Gemini_api
+from latex_generator import LatexGenerator
 
-# Add this line to load variables from .env
+# Load environment variables
 load_dotenv()
 
+# Set up API keys and tokens
 TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 genai.configure(api_key=GEMINI_API_KEY)
+
+# Initialize Telegram app
 app = Application.builder().token(TELEGRAM_BOT_TOKEN).build()
 flask_app = Flask(__name__)
+
+# Initialize conversation storage
 user_conversations = {}
 user_plot_data = {}  
 
@@ -115,15 +122,110 @@ async def handle_message(update: Update, context: CallbackContext):
     except Exception as e:
         print(f"❌ Lỗi khi gửi tin nhắn: {e}")
 
+async def report_help_command(update: Update, context: CallbackContext):
+    """Show report help"""
+    help_text = (
+        "🔍 *Các lệnh báo cáo:*\n\n"
+        "• `/report` - Báo cáo kinh tế tổng quan\n"
+        "• `/report_economic` - Báo cáo phân tích kinh tế\n"
+        "• `/report_market` - Báo cáo phân tích thị trường\n"
+        "• `/report_forecast` - Báo cáo dự báo kinh tế\n"
+        "• `/report_custom` - Báo cáo kinh tế tùy chỉnh\n\n"
+        "Hoặc bạn có thể nhập: 'báo cáo kinh tế', 'báo cáo thị trường', 'báo cáo dự báo'"
+    )
+    await update.message.reply_text(help_text, parse_mode="Markdown")
+
+async def baocao_help_command(update: Update, context: CallbackContext):
+    """Show report help in Vietnamese"""
+    help_text = (
+        "📊 *Hướng dẫn tạo báo cáo:*\n\n"
+        "Bạn có thể yêu cầu các loại báo cáo sau:\n\n"
+        "• 'báo cáo kinh tế' - Báo cáo tổng quan kinh tế\n"
+        "• 'báo cáo thị trường' - Phân tích thị trường chứng khoán\n"
+        "• 'báo cáo dự báo' - Dự báo xu hướng kinh tế\n"
+        "• 'báo cáo tùy chỉnh' - Báo cáo theo yêu cầu\n\n"
+        "Cách sử dụng: Chỉ cần nhắn tin với nội dung 'báo cáo kinh tế', 'tạo báo cáo thị trường', v.v."
+    )
+    await update.message.reply_text(help_text, parse_mode="Markdown")
+
+async def latex_command(update: Update, context: CallbackContext):
+    """Handle /latex command to generate LaTeX"""
+    if not context.args:
+        await update.message.reply_text(
+            "Vui lòng cung cấp mô tả cho mã LaTeX. Ví dụ: /latex phương trình bậc hai"
+        )
+        return
+    
+    prompt = " ".join(context.args)
+    await gemini_bot.latex_generator.generate_latex(update, context, prompt)
+
+async def latex_list_command(update: Update, context: CallbackContext):
+    """List all LaTeX files created by the user"""
+    await gemini_bot.latex_generator.list_latex_files(update, context)
+
+async def latex_get_command(update: Update, context: CallbackContext):
+    """Get a specific LaTeX file"""
+    await gemini_bot.latex_generator.get_latex_file(update, context)
+
+async def latex_help_command(update: Update, context: CallbackContext):
+    """Show LaTeX help"""
+    help_text = (
+        "📝 *Hướng dẫn tạo tài liệu PDF:*\n\n"
+        "Bạn có thể tạo các tài liệu PDF sử dụng LaTeX với các cách sau:\n\n"
+        "• `/latex [mô tả]` - Tạo tài liệu từ mô tả của bạn\n"
+        "• Nhắn tin với từ khóa 'tạo pdf' hoặc 'pdf' + mô tả\n\n"
+        "Ví dụ: \n"
+        "- `/latex báo cáo kinh tế với 2 bảng và 1 biểu đồ`\n"
+        "- `tạo pdf phương trình kinh tế vĩ mô`\n\n"
+        "Các lệnh khác:\n"
+        "• `/latex_list` - Xem danh sách tài liệu đã tạo\n"
+        "• `/latex_get [số]` - Tải lại tài liệu đã tạo\n"
+        "• `/latex_help` - Hiển thị hướng dẫn này"
+    )
+    await update.message.reply_text(help_text, parse_mode="Markdown")
+
+async def company_report_command(update: Update, context: CallbackContext):
+    """Handle /company_report command to generate company analysis PDF"""
+    if not context.args:
+        await update.message.reply_text(
+            "Vui lòng cung cấp tên công ty để phân tích. Ví dụ: /company_report Apple Inc"
+        )
+        return
+    
+    company_name = " ".join(context.args)
+    prompt = f"báo cáo phân tích công ty {company_name} chi tiết, bao gồm tổng quan về doanh nghiệp, phân tích tài chính, SWOT, và dự báo"
+    await gemini_bot.latex_generator.generate_latex(update, context, prompt)
+
+async def clear_history_command(update: Update, context: CallbackContext):
+    """Clear conversation history"""
+    await gemini_bot.clear_history(update, context)
 
 def run_flask():
     """Chạy Flask để xử lý Webhook"""
     flask_app.run(host="0.0.0.0", port=8080)
 
-
 if __name__ == "__main__":
-    app.add_handler(CommandHandler("start", gemini_bot.start_command))
-    app.add_handler(CommandHandler("report", gemini_bot.generate_report_command))  # Add this line
-    app.add_handler(
-        MessageHandler(filters.TEXT & ~filters.COMMAND, gemini_bot.handle_message))
+    # Initialize Gemini bot
+    gemini_bot = Gemini_api()
+    
+    # Initialize LaTeX generator and attach it to the Gemini bot
+    latex_generator = LatexGenerator(gemini_bot)
+    gemini_bot.latex_generator = latex_generator
+
+    # Add message handler
+    app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, gemini_bot.handle_message))
+    
+    # Add command handlers
+    app.add_handler(CommandHandler("start", start_command))
+    app.add_handler(CommandHandler("latex", latex_command))
+    app.add_handler(CommandHandler("latex_list", latex_list_command))
+    app.add_handler(CommandHandler("latex_get", latex_get_command))
+    app.add_handler(CommandHandler("latex_help", latex_help_command))
+    app.add_handler(CommandHandler("company_report", company_report_command))
+    app.add_handler(CommandHandler("clear_history", clear_history_command))
+    
+    # Add document handler to handle CSV uploads
+    app.add_handler(MessageHandler(filters.Document.FileExtension("csv"), gemini_bot.handle_message))
+    
+    # Start the bot
     app.run_polling()
