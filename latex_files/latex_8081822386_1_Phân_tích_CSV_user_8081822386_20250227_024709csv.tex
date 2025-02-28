@@ -1,0 +1,120 @@
+\documentclass[12pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{geometry}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{enumitem}
+
+\geometry{a4paper, margin=1in}
+
+\title{Báo Cáo Phân Tích Dữ Liệu CSV: user\_8081822386\_20250227\_024709.csv}
+\author{}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+\thispagestyle{empty}
+
+\newpage
+\tableofcontents
+\newpage
+
+\section{Tổng quan về dữ liệu}
+
+\subsection{Thông tin chung}
+
+\begin{itemize}
+    \item Tên file: user\_8081822386\_20250227\_024709.csv
+    \item Số hàng: 68
+    \item Số cột: 5
+    \item Các cột: Commercial and Specialized Banks, ATM terminals, POS**, Debit Cards, Credit Cards
+\end{itemize}
+
+\section{Phân tích chi tiết từng cột quan trọng}
+
+\subsection{Phân tích cột số}
+
+\subsubsection{ATM terminals}
+
+\begin{itemize}
+    \item Min: 0.00
+    \item Max: 1393.00
+    \item Mean: 79.47
+    \item Std: 235.31
+    \item Số giá trị có thể là ngoại lai: 6 (~8.8\%)
+    \item Phân phối lệch phải (skewness=4.83)
+\end{itemize}
+
+\subsubsection{POS**}
+
+\begin{itemize}
+    \item Min: 0.00
+    \item Max: 14748.00
+    \item Mean: 541.12
+    \item Std: 2170.81
+    \item Số giá trị có thể là ngoại lai: 10 (~14.7\%)
+    \item Phân phối lệch phải (skewness=5.47)
+\end{itemize}
+
+\subsubsection{Debit Cards}
+
+\begin{itemize}
+    \item Min: 0.00
+    \item Max: 1853629.00
+    \item Mean: 76391.81
+    \item Std: 292119.33
+    \item Số giá trị có thể là ngoại lai: 8 (~11.8\%)
+    \item Phân phối lệch phải (skewness=5.39)
+\end{itemize}
+
+\subsubsection{Credit Cards}
+
+\begin{itemize}
+    \item Min: 0.00
+    \item Max: 100538.00
+    \item Mean: 3290.43
+    \item Std: 13043.64
+    \item Số giá trị có thể là ngoại lai: 8 (~11.8\%)
+    \item Phân phối lệch phải (skewness=6.59)
+\end{itemize}
+
+\subsection{Phân tích cột phân loại}
+
+\subsubsection{Commercial and Specialized Banks}
+
+\begin{itemize}
+    \item Số giá trị duy nhất: 68
+    \item Các giá trị phổ biến nhất: ធនាគារ អេស៊ីលីដា ភីអិលស៊ី (1), ធនាគារ ភ្នំពេញ ពាណិជ្ជ ម.ក (1), ធនាគារ ស្ថាបនា ភីអិលស៊ី (1)
+    \item Cột này có độ phân tán cao, có thể là ID hoặc dữ liệu duy nhất
+\end{itemize}
+
+\section{Phát hiện các mẫu và xu hướng trong dữ liệu}
+
+Dựa trên phân tích ban đầu, có một số điểm đáng chú ý:
+
+\begin{itemize}
+    \item Các cột số đều có phân phối lệch phải, cho thấy sự tập trung của các giá trị thấp và một số ít giá trị rất lớn.
+    \item Số lượng ngoại lai tương đối cao ở tất cả các cột số, có thể ảnh hưởng đến các phân tích thống kê.
+    \item Cột "Commercial and Specialized Banks" có vẻ là một định danh duy nhất cho mỗi hàng, không cung cấp nhiều thông tin để phân tích tổng hợp.
+\end{itemize}
+
+\section{Đề xuất các phương pháp phân tích sâu hơn}
+
+\begin{itemize}
+    \item \textbf{Xử lý ngoại lai}: Cần xem xét các phương pháp xử lý ngoại lai phù hợp, chẳng hạn như loại bỏ, thay thế bằng giá trị trung bình hoặc trung vị, hoặc sử dụng các mô hình thống kê mạnh mẽ hơn.
+    \item \textbf{Phân tích tương quan}: Kiểm tra tương quan giữa các cột số để tìm các mối quan hệ tiềm ẩn.
+    \item \textbf{Phân tích phân cụm}: Sử dụng các thuật toán phân cụm để xác định các nhóm ngân hàng có đặc điểm tương đồng về số lượng ATM, POS, thẻ ghi nợ và thẻ tín dụng.
+    \item \textbf{Phân tích thời gian}: Nếu có dữ liệu theo thời gian, có thể thực hiện phân tích chuỗi thời gian để phát hiện các xu hướng và biến động theo thời gian.
+    \item \textbf{Phân tích hồi quy}: Xây dựng các mô hình hồi quy để dự đoán số lượng ATM, POS, thẻ ghi nợ và thẻ tín dụng dựa trên các yếu tố khác.
+\end{itemize}
+
+\section{Kết luận}
+
+Báo cáo này cung cấp một phân tích tổng quan về dữ liệu CSV được cung cấp.  Phân tích cho thấy có sự hiện diện của các giá trị ngoại lai và phân phối lệch phải, cần được xem xét trong các phân tích sâu hơn. Các đề xuất phân tích sâu hơn sẽ giúp khám phá các mẫu và xu hướng tiềm ẩn trong dữ liệu, cung cấp thông tin chi tiết hơn về hệ thống ngân hàng được mô tả trong dữ liệu.
+
+\end{document}

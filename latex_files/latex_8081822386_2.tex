@@ -1,223 +1,79 @@
-\documentclass[11pt]{article}
-\usepackage[utf8]{inputenc}
-\usepackage{amsmath, amssymb}
-\usepackage{graphicx}
-\usepackage{geometry}
-\usepackage{hyperref}
-\usepackage{booktabs}
-\usepackage{array}
-\usepackage{xcolor}
-\usepackage{tikz}
-\usepackage{pgfplots}
-\pgfplotsset{compat=1.17}
-\geometry{a4paper, margin=1in}
+\documentclass{article}
 
-\title{Báo Cáo Phân Tích Công Ty: Ngân Hàng TMCP Sài Gòn Thương Tín (Sacombank)}
-\author{Nhóm Phân Tích Đầu Tư}
-\date{\today}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{csvsimple}
+\usepackage{longtable}
+\usepackage{booktabs}
 
 \begin{document}
 
-\begin{titlepage}
-\centering
-\includegraphics[width=0.3\textwidth]{example-image-a} % Thay thế bằng logo Sacombank
-\vspace{1cm}
-\textbf{\LARGE Báo Cáo Phân Tích Công Ty}
-\vspace{0.5cm}
-\textbf{\Large Ngân Hàng TMCP Sài Gòn Thương Tín (Sacombank)}
-\vspace{1cm}
-\includegraphics[width=0.3\textwidth]{example-image-b} % Thay thế bằng hình ảnh liên quan
-\vspace{2cm}
-\textit{Thực hiện bởi:}
-\vspace{0.5cm}
-Nhóm Phân Tích Đầu Tư
-\vspace{1cm}
-\today
-\end{titlepage}
+\title{Phân Tích CSV}
+\author{Một Mô Hình Ngôn Ngữ Lớn}
+\date{\today}
 
-\tableofcontents
+\maketitle
 
-\section{Tóm Tắt Điểm Nhấn Đầu Tư (Executive Summary)}
+\section{Giới thiệu}
 
-Sacombank là một trong những ngân hàng thương mại cổ phần lớn nhất tại Việt Nam, với mạng lưới rộng khắp và bề dày kinh nghiệm hoạt động. Báo cáo này phân tích tình hình tài chính, hoạt động kinh doanh và triển vọng phát triển của Sacombank, đồng thời đưa ra khuyến nghị đầu tư dựa trên định giá và đánh giá rủi ro.
+Tài liệu này trình bày cách phân tích dữ liệu từ tệp CSV bằng \LaTeX. Chúng ta sẽ sử dụng gói \texttt{csvsimple} để đọc và hiển thị dữ liệu.
 
-Điểm nhấn đầu tư:
-\begin{itemize}
-    \item Tăng trưởng tín dụng ổn định và bền vững.
-    \item Cải thiện chất lượng tài sản và giảm nợ xấu.
-    \item Mở rộng mạng lưới và phát triển dịch vụ ngân hàng số.
-    \item Cơ hội từ thị trường ngân hàng bán lẻ đang phát triển.
-\end{itemize}
+\section{Ví dụ về Tệp CSV}
 
-\section{Tổng Quan Về Doanh Nghiệp}
+Giả sử chúng ta có một tệp CSV có tên là \texttt{data.csv} với nội dung sau:
 
-Ngân hàng TMCP Sài Gòn Thương Tín (Sacombank) là một trong những ngân hàng thương mại cổ phần hàng đầu tại Việt Nam. Được thành lập vào năm 1991, Sacombank đã trải qua quá trình phát triển mạnh mẽ và trở thành một trong những ngân hàng có quy mô lớn nhất cả nước.
+\begin{verbatim}
+Name,Age,City
+Alice,30,New York
+Bob,25,London
+Charlie,35,Paris
+\end{verbatim}
 
-\subsection{Lịch sử hình thành và phát triển}
-Sacombank được thành lập trên cơ sở hợp nhất các ngân hàng nhỏ tại TP.HCM. Trải qua nhiều giai đoạn phát triển, Sacombank không ngừng mở rộng quy mô, mạng lưới hoạt động và đa dạng hóa sản phẩm dịch vụ.
+\section{Sử dụng gói \texttt{csvsimple}}
 
-\subsection{Cơ cấu tổ chức và quản lý}
-Sacombank có cơ cấu tổ chức chặt chẽ với Hội đồng Quản trị, Ban Điều hành và các phòng ban chức năng. Ngân hàng áp dụng các chuẩn mực quản trị rủi ro quốc tế và tuân thủ các quy định của Ngân hàng Nhà nước.
+Chúng ta có thể sử dụng gói \texttt{csvsimple} để đọc và hiển thị dữ liệu này trong một bảng.
 
-\subsection{Sản phẩm và dịch vụ}
-Sacombank cung cấp đầy đủ các sản phẩm và dịch vụ ngân hàng cho khách hàng cá nhân và doanh nghiệp, bao gồm:
-\begin{itemize}
-    \item Tiền gửi tiết kiệm và tiền gửi thanh toán.
-    \item Cho vay tiêu dùng, cho vay mua nhà, cho vay kinh doanh.
-    \item Thẻ tín dụng, thẻ ghi nợ.
-    \item Dịch vụ ngân hàng điện tử (Internet Banking, Mobile Banking).
-    \item Dịch vụ thanh toán quốc tế, tài trợ thương mại.
-    \item Dịch vụ bảo hiểm.
-\end{itemize}
+\subsection{Bảng cơ bản}
 
-\section{Phân Tích Ngành và Môi Trường Kinh Doanh}
+\begin{center}
+\csvreader[head to column names]{data.csv}{}{%
+  \Name & \Age & \City \\\hline
+}
+\end{center}
 
-\subsection{Tổng quan ngành ngân hàng Việt Nam}
-Ngành ngân hàng Việt Nam đang trải qua giai đoạn phát triển mạnh mẽ với sự tăng trưởng của nền kinh tế và nhu cầu dịch vụ tài chính ngày càng tăng cao. Tuy nhiên, ngành ngân hàng cũng đối mặt với nhiều thách thức như cạnh tranh gay gắt, nợ xấu và áp lực tuân thủ các quy định.
+\subsection{Bảng với \texttt{longtable} và \texttt{booktabs}}
 
-\subsection{Các yếu tố vĩ mô ảnh hưởng}
-Các yếu tố vĩ mô như tăng trưởng GDP, lạm phát, lãi suất và tỷ giá hối đoái có ảnh hưởng lớn đến hoạt động của ngành ngân hàng. Chính sách tiền tệ của Ngân hàng Nhà nước cũng đóng vai trò quan trọng trong việc điều tiết thanh khoản và ổn định thị trường.
+Để tạo ra một bảng dài hơn và đẹp mắt hơn, chúng ta có thể sử dụng gói \texttt{longtable} và \texttt{booktabs}.
 
-\subsection{Cạnh tranh trong ngành}
-Sacombank phải đối mặt với sự cạnh tranh gay gắt từ các ngân hàng thương mại nhà nước, ngân hàng thương mại cổ phần khác và các tổ chức tài chính phi ngân hàng.
-
-\section{Phân Tích Tài Chính Chi Tiết}
-
-\subsection{Doanh thu và lợi nhuận}
-
-\begin{table}[h!]
-\centering
-\caption{Doanh thu và Lợi nhuận Sacombank (Tỷ đồng)}
-\begin{tabular}{lcccc}
+\begin{longtable}{lll}
+\caption{Dữ liệu từ \texttt{data.csv}} \\
 \toprule
-Chỉ tiêu & 2021 & 2022 & 2023 & Dự báo 2024 \\
+Name & Age & City \\
 \midrule
-Doanh thu thuần & 15,000 & 18,000 & 22,000 & 25,000 \\
-Lợi nhuận trước thuế & 4,000 & 5,000 & 6,500 & 7,500 \\
-Lợi nhuận sau thuế & 3,200 & 4,000 & 5,200 & 6,000 \\
-\bottomrule
-\end{tabular}
-\end{table}
+\endfirsthead
 
-\subsection{Biên lợi nhuận}
-
-\begin{figure}[h!]
-\centering
-\begin{tikzpicture}
-\begin{axis}[
-    xlabel=Năm,
-    ylabel=Biên lợi nhuận,
-    xmin=2020.5, xmax=2024.5,
-    ymin=20, ymax=35,
-    xtick={2021,2022,2023,2024},
-    legend pos=north west,
-    ymajorgrids=true,
-    grid style=dashed,
-]
-\addplot[
-    color=blue,
-    mark=*,
-    ]
-    coordinates {
-    (2021,26.7)(2022,27.8)(2023,29.5)(2024,30)
-    };
-    \addlegendentry{Biên LN ròng};
-\end{axis}
-\end{tikzpicture}
-\caption{Biên lợi nhuận ròng của Sacombank}
-\end{figure}
-
-\subsection{ROE và ROA}
-
-\begin{table}[h!]
-\centering
-\caption{ROE và ROA Sacombank}
-\begin{tabular}{lcccc}
+\multicolumn{3}{c}%
+{{\bfseries Tiếp tục từ trang trước}} \\
 \toprule
-Chỉ tiêu & 2021 & 2022 & 2023 & Dự báo 2024 \\
+Name & Age & City \\
 \midrule
-ROE (\%) & 12 & 14 & 16 & 17 \\
-ROA (\%) & 1.2 & 1.4 & 1.6 & 1.7 \\
+\endhead
+
+\midrule
+\multicolumn{3}{r}{{Tiếp tục ở trang sau}} \\
+\endfoot
+
 \bottomrule
-\end{tabular}
-\end{table}
+\endlastfoot
 
-\subsection{Các chỉ số tài chính khác}
-\begin{itemize}
-    \item Tỷ lệ nợ xấu: Tiếp tục giảm nhờ xử lý nợ tồn đọng.
-    \item Tỷ lệ an toàn vốn (CAR): Đảm bảo tuân thủ quy định của NHNN.
-\end{itemize}
+\csvreader[head to column names]{data.csv}{}{%
+  \Name & \Age & \City \\
+}
+\end{longtable}
 
-\section{Phân Tích SWOT}
+\section{Kết luận}
 
-\subsection{Điểm mạnh (Strengths)}
-\begin{itemize}
-    \item Mạng lưới rộng khắp cả nước.
-    \item Thương hiệu uy tín.
-    \item Khả năng huy động vốn tốt.
-\end{itemize}
-
-\subsection{Điểm yếu (Weaknesses)}
-\begin{itemize}
-    \item Nợ xấu còn tồn đọng.
-    \item Chi phí hoạt động cao.
-    \item Khả năng cạnh tranh với các ngân hàng lớn còn hạn chế.
-\end{itemize}
-
-\subsection{Cơ hội (Opportunities)}
-\begin{itemize}
-    \item Thị trường ngân hàng bán lẻ tiềm năng.
-    \item Phát triển dịch vụ ngân hàng số.
-    \item Hợp tác với các đối tác chiến lược.
-\end{itemize}
-
-\subsection{Thách thức (Threats)}
-\begin{itemize}
-    \item Cạnh tranh gay gắt từ các ngân hàng khác.
-    \item Rủi ro tín dụng và rủi ro hoạt động.
-    \item Thay đổi chính sách và quy định của NHNN.
-\end{itemize}
-
-\section{Định Giá và Dự Báo}
-
-\subsection{Phương pháp định giá}
-Sử dụng phương pháp chiết khấu dòng tiền (DCF) và so sánh P/E để định giá Sacombank.
-
-\subsection{Giả định dự báo}
-\begin{itemize}
-    \item Tăng trưởng tín dụng: 12%/năm.
-    \item NIM: 3.5%.
-    \item Chi phí hoạt động: Tăng trưởng 10%/năm.
-\end{itemize}
-
-\subsection{Kết quả định giá}
-Giá trị hợp lý của cổ phiếu Sacombank: 35,000 VNĐ/cổ phiếu.
-
-\section{Khuyến Nghị Đầu Tư}
-
-\subsection{Khuyến nghị}
-Khuyến nghị MUA cổ phiếu Sacombank với tiềm năng tăng giá hấp dẫn.
-
-\subsection{Luận điểm đầu tư}
-\begin{itemize}
-    \item Sacombank có tiềm năng tăng trưởng lợi nhuận ổn định.
-    \item Định giá hấp dẫn so với các ngân hàng cùng ngành.
-    \item Quá trình tái cơ cấu và xử lý nợ xấu đang diễn ra tích cực.
-\end{itemize}
-
-\section{Các Rủi Ro Chính}
-
-\subsection{Rủi ro tín dụng}
-Rủi ro nợ xấu gia tăng do ảnh hưởng của dịch bệnh và suy thoái kinh tế.
-
-\subsection{Rủi ro hoạt động}
-Rủi ro gian lận, sai sót trong hoạt động và rủi ro công nghệ thông tin.
-
-\subsection{Rủi ro thị trường}
-Rủi ro lãi suất, rủi ro tỷ giá và rủi ro thanh khoản.
-
-\section{Kết Luận}
-
-Sacombank là một ngân hàng có tiềm năng tăng trưởng tốt trong dài hạn. Tuy nhiên, nhà đầu tư cần lưu ý đến các rủi ro tiềm ẩn và theo dõi sát sao tình hình hoạt động của ngân hàng. Khuyến nghị MUA cổ phiếu Sacombank với mục tiêu đầu tư dài hạn.
+\LaTeX, cùng với các gói như \texttt{csvsimple}, có thể được sử dụng để phân tích và trình bày dữ liệu từ tệp CSV một cách hiệu quả.
 
 \end{document}

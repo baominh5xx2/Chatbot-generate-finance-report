@@ -1,0 +1,51 @@
+{
+  "Meta": [
+    "CP",
+    "Năm",
+    "Kỳ"
+  ],
+  "Chỉ tiêu cơ cấu nguồn vốn": [
+    "(Vay NH+DH)/VCSH",
+    "Nợ/VCSH",
+    "TSCĐ / Vốn CSH",
+    "Vốn CSH/Vốn điều lệ"
+  ],
+  "Chỉ tiêu hiệu quả hoạt động": [
+    "Vòng quay tài sản",
+    "Vòng quay TSCĐ",
+    "Số ngày thu tiền bình quân",
+    "Số ngày tồn kho bình quân",
+    "Số ngày thanh toán bình quân",
+    "Chu kỳ tiền",
+    "Vòng quay hàng tồn kho"
+  ],
+  "Chỉ tiêu khả năng sinh lợi": [
+    "Biên EBIT (%)",
+    "Biên lợi nhuận gộp (%)",
+    "Biên lợi nhuận ròng (%)",
+    "ROE (%)",
+    "ROIC (%)",
+    "ROA (%)",
+    "EBITDA (Tỷ đồng)",
+    "EBIT (Tỷ đồng)",
+    "Tỷ suất cổ tức (%)"
+  ],
+  "Chỉ tiêu thanh khoản": [
+    "Chỉ số thanh toán hiện thời",
+    "Chỉ số thanh toán tiền mặt",
+    "Chỉ số thanh toán nhanh",
+    "Khả năng chi trả lãi vay",
+    "Đòn bẩy tài chính"
+  ],
+  "Chỉ tiêu định giá": [
+    "P/B",
+    "Vốn hóa (Tỷ đồng)",
+    "Số CP lưu hành (Triệu CP)",
+    "P/E",
+    "P/S",
+    "P/Cash Flow",
+    "EPS (VND)",
+    "BVPS (VND)",
+    "EV/EBITDA"
+  ]
+}

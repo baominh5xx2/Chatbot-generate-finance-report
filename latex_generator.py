@@ -121,12 +121,7 @@ class LatexGenerator:
                         document=open(result, "rb"),
                         filename=file_data["pdf_filename"],
                         caption=caption
-                    )
-                    
-                    # Send a follow-up message with the full prompt if needed
-                    if len(prompt) > 100:
-                        await update.message.reply_text(f"Tạo theo yêu cầu: {prompt[:500]}...")
-                    
+                    )                    
                 except Exception as e:
                     print(f"Error sending document: {e}")
                     # Try again with an even shorter caption

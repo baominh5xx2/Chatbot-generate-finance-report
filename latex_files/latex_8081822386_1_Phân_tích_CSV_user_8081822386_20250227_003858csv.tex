@@ -1,0 +1,104 @@
+\documentclass[12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{geometry}
+\usepackage{booktabs}
+\usepackage{float}
+\usepackage{datetime}
+
+\geometry{a4paper, margin=1in}
+
+\title{Báo Cáo Phân Tích Dữ Liệu CSV: user\_8081822386\_20250227\_003858.csv}
+\author{}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+\thispagestyle{empty} % Không hiển thị số trang trên trang bìa
+
+\newpage
+
+\tableofcontents
+
+\newpage
+
+\section{Tổng quan về dữ liệu}
+
+\subsection{Thông tin chung}
+
+\begin{itemize}
+    \item Tên file: user\_8081822386\_20250227\_003858.csv
+    \item Số hàng: 4
+    \item Số cột: 3
+    \item Các cột: Name, Age, City
+\end{itemize}
+
+\section{Phân tích chi tiết từng cột quan trọng}
+
+\subsection{Phân tích cột số: Age}
+
+\begin{itemize}
+    \item Min: 24.00
+    \item Max: 40.00
+    \item Mean: 31.75
+    \item Std: 7.14
+\end{itemize}
+
+\subsection{Phân tích cột phân loại: Name}
+
+\begin{itemize}
+    \item Số giá trị duy nhất: 4
+    \item Các giá trị phổ biến nhất:
+    \begin{itemize}
+        \item John (1)
+        \item Alice (1)
+        \item Bob (1)
+    \end{itemize}
+\end{itemize}
+
+\subsection{Phân tích cột phân loại: City}
+
+\begin{itemize}
+    \item Số giá trị duy nhất: 4
+    \item Các giá trị phổ biến nhất:
+    \begin{itemize}
+        \item New York (1)
+        \item Los Angeles (1)
+        \item Chicago (1)
+    \end{itemize}
+\end{itemize}
+
+\subsection{Phân tích cột thời gian: Name}
+
+\begin{itemize}
+    \item Name có thể chứa thông tin thời gian
+\end{itemize}
+
+\section{Phát hiện các mẫu và xu hướng trong dữ liệu}
+
+Do dữ liệu nhỏ (4 hàng), việc phát hiện các mẫu và xu hướng có ý nghĩa thống kê là hạn chế. Tuy nhiên, có thể nhận thấy:
+
+\begin{itemize}
+    \item Không có giá trị trùng lặp trong cột Name hoặc City, cho thấy có thể là mỗi hàng đại diện cho một người duy nhất và một thành phố duy nhất.
+    \item Phạm vi tuổi từ 24 đến 40 cho thấy đối tượng có thể là người trưởng thành đang đi làm.
+\end{itemize}
+
+\section{Đề xuất các phương pháp phân tích sâu hơn}
+
+Để phân tích dữ liệu sâu hơn, cần thu thập nhiều dữ liệu hơn. Một số phương pháp có thể được áp dụng:
+
+\begin{itemize}
+    \item **Phân tích tương quan**: Nếu có thêm các cột số (ví dụ: thu nhập), phân tích tương quan có thể giúp xác định mối quan hệ giữa các biến.
+    \item **Phân cụm**: Phân cụm dữ liệu có thể giúp nhóm các đối tượng có đặc điểm tương đồng lại với nhau.
+    \item **Phân tích hồi quy**: Nếu có một biến mục tiêu, phân tích hồi quy có thể giúp dự đoán giá trị của biến mục tiêu dựa trên các biến độc lập.
+    \item **Phân tích chuỗi thời gian**: Nếu cột "Name" thực sự chứa thông tin thời gian, phân tích chuỗi thời gian có thể giúp phát hiện các xu hướng và mô hình theo thời gian. Cần tiền xử lý dữ liệu để trích xuất thông tin thời gian.
+\end{itemize}
+
+\section{Kết luận}
+
+Báo cáo này đã cung cấp một phân tích tổng quan về dữ liệu trong file user\_8081822386\_20250227\_003858.csv. Do kích thước dữ liệu hạn chế, phân tích sâu hơn yêu cầu thu thập thêm dữ liệu và áp dụng các phương pháp phân tích phức tạp hơn. Các đề xuất phân tích sâu hơn đã được trình bày ở trên.
+
+\end{document}
