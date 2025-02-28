@@ -1,6 +1,0 @@
-{'dimension': 768,
- 'index_fullness': 0.0,
- 'metric': 'cosine',
- 'namespaces': {},
- 'total_vector_count': 0,
- 'vector_type': 'dense'}

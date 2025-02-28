@@ -1,0 +1,116 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T5]{fontenc}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{geometry}
+\usepackage{fancyhdr}
+\usepackage{array}
+\usepackage{enumitem}
+
+\geometry{a4paper, margin=1in}
+
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{Báo cáo Phân tích Dữ liệu}
+\lhead{user\_8081822386\_20250227\_015522.csv}
+\cfoot{\thepage}
+
+\begin{document}
+
+% Trang bìa
+\begin{titlepage}
+    \centering
+    \vspace*{\fill}
+    \Huge
+    \textbf{Báo Cáo Phân Tích Dữ Liệu CSV}
+    
+    \vspace{0.5cm}
+    \Large
+    \textbf{user\_8081822386\_20250227\_015522.csv}
+    
+    \vspace{1cm}
+    
+    \large
+    Ngày tạo báo cáo: \today
+    \vspace*{\fill}
+\end{titlepage}
+
+% Mục lục
+\tableofcontents
+\newpage
+
+% Phần 1: Tổng quan về dữ liệu
+\section{Tổng quan về dữ liệu}
+
+\begin{itemize}
+    \item \textbf{Tên file:} user\_8081822386\_20250227\_015522.csv
+    \item \textbf{Số hàng:} 100
+    \item \textbf{Số cột:} 2
+    \item \textbf{Các cột:} X, Y
+\end{itemize}
+
+% Phần 2: Phân tích chi tiết
+\section{Phân tích chi tiết}
+
+\subsection{Cấu trúc dữ liệu}
+\begin{itemize}
+    \item Dữ liệu có \textbf{100 dòng} và \textbf{2 cột}.
+    \item \textbf{Cột nhãn:} X
+    \item \textbf{Cột số liệu:} Y
+\end{itemize}
+
+\subsection{Phân tích mối quan hệ nhãn-số liệu}
+
+Phân tích \textbf{Y} theo \textbf{X}:
+
+\begin{itemize}
+    \item \textbf{Top 3 giá trị cao nhất:}
+    \begin{itemize}
+        \item 74: Trung bình = 92.00, Min = 92.00, Max = 92.00
+        \item 12: Trung bình = 89.00, Min = 89.00, Max = 89.00
+        \item 13: Trung bình = 89.00, Min = 89.00, Max = 89.00
+    \end{itemize}
+    \item \textbf{Tổng quan:} Trung bình tổng thể = 47.85
+\end{itemize}
+
+\subsection{Phân tích cột số}
+\begin{itemize}
+    \item \textbf{X:} Min=1.00, Max=100.00, Trung bình=50.50, Độ lệch chuẩn=29.01
+    \item \textbf{Y:} Min=1.00, Max=92.00, Trung bình=47.85, Độ lệch chuẩn=27.02
+\end{itemize}
+
+% Phần 3: Phát hiện mẫu và xu hướng
+\section{Phát hiện các mẫu và xu hướng}
+
+Dựa trên phân tích sơ bộ, có một số điểm đáng chú ý:
+
+\begin{itemize}
+    \item Giá trị Y có xu hướng tập trung quanh giá trị trung bình (47.85).
+    \item Có một vài giá trị X (74, 12, 13) có giá trị Y cao vượt trội.
+    \item Độ lệch chuẩn của cả X và Y đều khá lớn, cho thấy sự phân tán dữ liệu đáng kể.
+\end{itemize}
+
+
+% Phần 4: Đề xuất phân tích sâu hơn
+\section{Đề xuất các phương pháp phân tích sâu hơn}
+
+Để hiểu rõ hơn về dữ liệu, các phân tích sau đây được đề xuất:
+
+\begin{enumerate}
+    \item \textbf{Phân tích tương quan:} Sử dụng biểu đồ phân tán (scatter plot) và hệ số tương quan để xác định mối quan hệ giữa X và Y.
+    \item \textbf{Phân tích hồi quy:} Nếu có mối quan hệ tuyến tính, xây dựng mô hình hồi quy để dự đoán giá trị Y dựa trên X.
+    \item \textbf{Phân tích nhóm:}  Sử dụng các thuật toán phân cụm (clustering) để xem liệu có các nhóm dữ liệu riêng biệt nào không.
+    \item \textbf{Phân tích chuỗi thời gian (nếu có):} Nếu dữ liệu có yếu tố thời gian, phân tích xu hướng, chu kỳ và tính thời vụ.
+    \item \textbf{Kiểm tra giả thuyết:} Đặt ra các giả thuyết về dữ liệu và kiểm tra chúng bằng các phương pháp thống kê.
+    \item \textbf{Trực quan hóa dữ liệu nâng cao:} Sử dụng các biểu đồ phức tạp hơn như heatmap, box plot để hiển thị dữ liệu một cách trực quan.
+\end{enumerate}
+
+
+% Phần 5: Kết luận
+\section{Kết luận}
+
+Báo cáo này đã cung cấp một cái nhìn tổng quan về dữ liệu trong file user\_8081822386\_20250227\_015522.csv.  Dữ liệu bao gồm 100 dòng và 2 cột (X và Y), với một số giá trị Y cao nổi bật tại các giá trị X cụ thể.  Độ lệch chuẩn lớn cho thấy sự phân tán dữ liệu.  Các phân tích sâu hơn, bao gồm phân tích tương quan, hồi quy và phân cụm, được đề xuất để khám phá dữ liệu chi tiết hơn và tìm ra các mẫu tiềm ẩn.
+
+\end{document}

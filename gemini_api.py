@@ -4,7 +4,6 @@ from telegram import Update
 from datetime import datetime
 import time
 from generate_plot import GeneratePlot
-from reading_csv import CSVReader  # Import the new CSV reader
 import re
 import io
 import json
@@ -20,7 +19,6 @@ class Gemini_api:
         self.max_history_length = 10  # Increased from 3 to retain more context
         self.history_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), "conversation_history.json")
         self._load_history()
-        self.csv_reader = CSVReader()  # Initialize CSV reader
         
     def _load_history(self):
         """Load conversation history from file if it exists"""
@@ -62,16 +60,29 @@ class Gemini_api:
 
     async def handle_message(self, update: Update, context: CallbackContext):
         """Xử lý tin nhắn"""
-        user_id = str(update.message.chat_id)  # Convert to string for JSON serialization
+        user_id = str(update.message.chat_id)
         current_time = time.time()
-        
-        # Handle file uploads (specifically CSV files)
-        if update.message.document and update.message.document.file_name.endswith('.csv'):
-            await self.handle_csv_upload(update, context)
-            return
-            
-        # Handle text messages as before
         message = update.message.text
+        
+        # Check if we're expecting specific input for vnstock functions
+        if context.user_data.get("expecting_input"):
+            expected_input = context.user_data.pop("expecting_input")  # Remove after handling
+            
+            if expected_input == "stock_code_current":
+                # Handle getting current price for the stock code
+                stock_code = message.strip().upper()
+                await update.message.reply_text(f"Đang lấy giá hiện tại cho mã {stock_code}...")
+                
+                # Implement code to fetch current stock price
+                # For example:
+                # from vnstock import get_stock_price
+                # price_data = get_stock_price(stock_code)
+                # await update.message.reply_text(f"Giá hiện tại của {stock_code}: {price_data}")
+                return
+                
+            # Add other handlers for different expected inputs
+        
+        # Handle text messages as before
         print(f"📩 Nhận tin nhắn từ người dùng ({user_id}): {message}")
 
         # Initialize chat history if needed with structured format
@@ -87,37 +98,36 @@ class Gemini_api:
         # Update last activity time
         self.user_conversations[user_id]["last_activity"] = current_time
         
-        # Handle CSV to PDF analysis request
-        if message.lower().startswith("tạo pdf phân tích csv") or message.lower().startswith("phân tích pdf csv"):
-            await self.generate_csv_analysis_pdf(update, context, message)
-            return
+        # Handle VNStock related queries - redirect appropriate queries
+        stock_keywords = ["chỉ số tài chính", "cổ phiếu", "chứng khoán", "thị trường"]
+        if any(keyword in message.lower() for keyword in stock_keywords) and not message.startswith('/'):
+            # Save the message in history for context
+            self.user_conversations[user_id]["messages"].append({
+                "role": "user",
+                "content": message,
+                "timestamp": current_time,
+            })
             
-        # Process special CSV-related commands
-        if message.lower().startswith("xem dữ liệu csv"):
-            preview = self.csv_reader.get_csv_preview(user_id)
-            await update.message.reply_text(preview)
-            return
+            # Generate a response about using search commands
+            response = (
+                "📊 Để truy vấn thông tin chứng khoán, bạn có thể sử dụng các lệnh sau:\n\n"
+                "• /search [mã cổ phiếu] - Xem thông tin tài chính (VD: /search VNM)\n"
+                "• /search_get [số] - Xem chỉ số cụ thể (sau khi chọn mã cổ phiếu)\n"
+                "• /search_chart - Xem biểu đồ giá cổ phiếu\n"
+                "• /search_help - Xem hướng dẫn sử dụng chi tiết\n\n"
+                "Bạn cũng có thể tìm hiểu thêm thông tin kinh tế và thị trường chứng khoán bằng cách hỏi trực tiếp."
+            )
             
-        if message.lower().startswith("thông tin cột"):
-            # Extract column name if provided
-            parts = message.split("thông tin cột")
-            column_name = parts[1].strip() if len(parts) > 1 and parts[1].strip() else None
-            info = self.csv_reader.get_column_info(user_id, column_name)
-            await update.message.reply_text(info)
-            return
+            # Save the response
+            self.user_conversations[user_id]["messages"].append({
+                "role": "assistant",
+                "content": response,
+                "timestamp": time.time()
+            })
             
-        if any(keyword in message.lower() for keyword in ["vẽ từ csv", "biểu đồ csv", "đồ thị csv"]):
-            # Generate plot from CSV data
-            buffer, result_msg = self.csv_reader.generate_quick_plot(user_id, message)
-            
-            if buffer:
-                await update.message.reply_photo(photo=buffer, caption="📊 Biểu đồ từ dữ liệu CSV")
-                await update.message.reply_text("💡 Để vẽ biểu đồ phức tạp hơn, hãy mô tả cụ thể dữ liệu và loại biểu đồ bạn muốn.")
-            else:
-                await update.message.reply_text(f"❌ {result_msg}")
+            await update.message.reply_text(response)
             return
-        
-        # Process special commands first
+
         # Get the most recent plot for this user
         if message.lower().startswith("xem code đồ thị"):
             if user_id in self.plot_generator.user_plot_data and self.plot_generator.user_plot_data[user_id]:
@@ -202,16 +212,9 @@ class Gemini_api:
         # Get conversation history - process the structured format for the Gemini prompt
         conversation_history = self._format_conversation_history(user_id)
         
-        # Construct the prompt with enhanced context - add CSV data context if available
-        csv_context = ""
-        if user_id in self.csv_reader.user_csv_data and self.csv_reader.user_csv_data[user_id]:
-            recent_file = self.csv_reader.user_csv_data[user_id][-1]
-            csv_context = f"\nNgười dùng đã tải lên file CSV '{recent_file['filename']}' với {recent_file['shape'][0]} dòng và {recent_file['shape'][1]} cột."
-            csv_context += f"\nCác cột trong dữ liệu: {', '.join(recent_file['columns'])}"
-            csv_context += "\nĐể tạo báo cáo PDF phân tích dữ liệu CSV này, người dùng có thể gõ 'tạo pdf phân tích csv'."
-            
         prompt = f"""
         Vai trò của bạn là một nhà phân tích kinh tế chuyên nghiệp.
+        - nếu người dùng yêu cầu cung cấp dữ liệu, chỉ số chứng khoán thì yêu cầu người dùng gõ '/search'.
         - Trả lời bằng tiếng việt.
         - Bạn hãy giới thiệu mình là một nhà phân tích kinh tế chuyên nghiệp.
         - không trả lời các câu hỏi không liên quan đến kinh tế.
@@ -227,10 +230,7 @@ class Gemini_api:
         + cung cấp các kiến thức về kinh tế học
         + vẽ biểu đồ từ dữ liệu mà người dùng cung cấp
         + tạo báo cáo phân tích công ty chuyên nghiệp dưới dạng PDF bằng cách sử dụng cú pháp "tạo pdf báo cáo phân tích công ty [tên công ty]" để nhận được báo cáo PDF chuyên nghiệp.
-        + phân tích file CSV bằng cách người dùng upload file
-        + tạo báo cáo phân tích dữ liệu CSV dưới dạng PDF bằng cách sử dụng cú pháp "tạo pdf phân tích csv" sau khi đã upload file CSV
         - Không trả lời các câu hỏi về phân biệt vùng miền ở Việt Nam.
-        {csv_context}
         Đây là cuộc hội thoại trước đó:
         {conversation_history}
         Người dùng: {message}
@@ -313,135 +313,3 @@ class Gemini_api:
     async def handle_plot_callback(self, update: Update, context: CallbackContext):
         """Delegate plot callbacks to the plot_generator"""
         await self.plot_generator.handle_plot_callback(update, context)
-        
-    async def generate_csv_analysis_pdf(self, update: Update, context: CallbackContext, message):
-        """Generate PDF analysis for CSV data"""
-        user_id = str(update.message.chat_id)
-        
-        await update.message.reply_text("🔄 Đang phân tích dữ liệu CSV và tạo báo cáo PDF...")
-        
-        # Get analysis data for the CSV
-        analysis_data, status = self.csv_reader.prepare_csv_analysis_data(user_id)
-        
-        if status != "success" or not analysis_data:
-            await update.message.reply_text(f"❌ {status}")
-            return
-            
-        try:
-            # Extract analysis focus if specified
-            focus_areas = []
-            if "về" in message.lower():
-                focus_part = message.lower().split("về", 1)[1].strip()
-                focus_areas = [area.strip() for area in focus_part.split(",")]
-            
-            # Prepare prompt for LaTeX generation with CSV insights
-            column_info = ", ".join(analysis_data["column_names"])
-            insights = analysis_data["insights"]
-            
-            # Create a specialized prompt for the Gemini model
-            prompt = f"""
-            Tạo một báo cáo phân tích chuyên nghiệp về dữ liệu CSV có:
-            - Tên file: {analysis_data['filename']}
-            - Số hàng: {analysis_data['rows']}
-            - Số cột: {analysis_data['columns']}
-            - Các cột: {column_info}
-            
-            Phân tích chi tiết:
-            {insights}
-            
-            Báo cáo cần bao gồm:
-            1. Trang bìa với tiêu đề "Báo Cáo Phân Tích Dữ Liệu CSV: {analysis_data['filename']}" và ngày tạo báo cáo
-            2. Mục lục
-            3. Tổng quan về dữ liệu
-            4. Phân tích chi tiết từng cột quan trọng
-            5. Phát hiện các mẫu và xu hướng trong dữ liệu
-            6. Đề xuất các phương pháp phân tích sâu hơn
-            7. Kết luận
-            
-            {f'Tập trung vào các khía cạnh: {", ".join(focus_areas)}' if focus_areas else ''}
-            
-            Định dạng báo cáo chuẩn, chuyên nghiệp và dễ đọc.
-            """
-            
-            # Use LaTeX generator to create PDF
-            if self.latex_generator:
-                await self.latex_generator.generate_latex(update, context, prompt, 
-                                                         f"Phân tích CSV - {analysis_data['filename']}")
-                
-                # Record in conversation history
-                self.user_conversations[user_id]["messages"].append({
-                    "role": "user", 
-                    "content": f"Yêu cầu tạo báo cáo phân tích dữ liệu từ file CSV: {analysis_data['filename']}",
-                    "timestamp": time.time()
-                })
-                
-                self.user_conversations[user_id]["messages"].append({
-                    "role": "assistant", 
-                    "content": f"Đã tạo báo cáo phân tích dữ liệu từ file CSV: {analysis_data['filename']}",
-                    "timestamp": time.time()
-                })
-                
-                self._save_history()
-            else:
-                await update.message.reply_text("❌ Không thể tạo báo cáo PDF vì chức năng LaTeX chưa được khởi tạo.")
-                
-        except Exception as e:
-            print(f"❌ Lỗi khi tạo báo cáo PDF: {e}")
-            await update.message.reply_text(
-                "❌ Đã xảy ra lỗi khi tạo báo cáo PDF. Vui lòng thử lại sau.")
-
-    async def handle_csv_upload(self, update: Update, context: CallbackContext):
-        """Handle CSV file uploads"""
-        user_id = str(update.message.chat_id)
-        document = update.message.document
-        
-        await update.message.reply_text("🔄 Đang xử lý file CSV của bạn...")
-        
-        try:
-            # Get file from Telegram
-            file = await context.bot.get_file(document.file_id)
-            file_content = await file.download_as_bytearray()
-            
-            # Process the CSV file
-            result = self.csv_reader.process_csv(file_content, user_id)
-            
-            if result["success"]:
-                # Send success message with summary
-                await update.message.reply_text(
-                    f"✅ Đã xử lý file CSV thành công!\n\n"
-                    f"📄 Tên file: {document.file_name}\n"
-                    f"📊 Thông tin:\n{result['summary']}\n\n"
-                    f"💡 Bạn có thể sử dụng các lệnh:\n"
-                    f"• 'xem dữ liệu csv' - để xem bản xem trước\n"
-                    f"• 'thông tin cột [tên_cột]' - để xem chi tiết về một cột\n"
-                    f"• 'vẽ biểu đồ csv [loại_biểu_đồ] [tên_cột]' - để vẽ biểu đồ từ dữ liệu\n"
-                    f"• 'tạo pdf phân tích csv' - để tạo báo cáo phân tích PDF chuyên sâu"
-                )
-                
-                # Add information to chat history
-                if user_id in self.user_conversations:
-                    self.user_conversations[user_id]["messages"].append({
-                        "role": "user",
-                        "content": f"Đã tải lên file CSV: {document.file_name}",
-                        "timestamp": time.time()
-                    })
-                    
-                    self.user_conversations[user_id]["messages"].append({
-                        "role": "assistant",
-                        "content": f"Đã phân tích file CSV: {result['summary']}",
-                        "timestamp": time.time()
-                    })
-                    
-                    self._save_history()
-            else:
-                # Send error message
-                await update.message.reply_text(
-                    f"❌ Không thể xử lý file CSV: {result['error']}\n"
-                    f"Vui lòng đảm bảo file CSV của bạn đúng định dạng và thử lại."
-                )
-                
-        except Exception as e:
-            print(f"❌ Lỗi khi xử lý file CSV: {e}")
-            await update.message.reply_text(
-                "❌ Đã xảy ra lỗi khi xử lý file CSV của bạn. Vui lòng thử lại hoặc sử dụng file khác."
-            )
